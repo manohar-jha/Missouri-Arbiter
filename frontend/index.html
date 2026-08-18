@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISSOURI ARBITER | Maritime Mission Control</title>
+    <!-- Fonts: Inter, Outfit, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="theme-space-dark">
+    <!-- Top System Grid Background Overlay -->
+    <div class="grid-overlay"></div>
+    <div class="stars-overlay"></div>
+
+    <div class="app-wrapper">
+        <!-- GLOBAL MISSION HEADER -->
+        <header class="mission-header">
+            <div class="header-left">
+                <div class="brand-container">
+                    <div class="brand-logo">
+                        <svg class="radar-logo-svg" viewBox="0 0 40 40" width="34" height="34">
+                            <circle cx="20" cy="20" r="18" fill="none" stroke="#00F0FF" stroke-width="1.5" opacity="0.4"/>
+                            <circle cx="20" cy="20" r="12" fill="none" stroke="#00F0FF" stroke-width="1" opacity="0.6"/>
+                            <circle cx="20" cy="20" r="6" fill="none" stroke="#00F0FF" stroke-width="1" opacity="0.8"/>
+                            <line x1="20" y1="2" x2="20" y2="38" stroke="#00F0FF" stroke-width="1" opacity="0.5"/>
+                            <line x1="2" y1="20" x2="38" y2="20" stroke="#00F0FF" stroke-width="1" opacity="0.5"/>
+                            <circle cx="20" cy="20" r="2.5" fill="#00F0FF"/>
+                            <polygon points="20,5 23,12 20,10 17,12" fill="#00F0FF"/>
+                        </svg>
+                        <div class="radar-pulse-ring"></div>
+                    </div>
+                    <div class="brand-text">
+                        <div class="brand-title">MISSOURI ARBITER <span class="version-badge">v2.4 CLOUD</span></div>
+                        <div class="brand-subtitle">AUTONOMOUS MARITIME MISSION CONTROL & TRAFFIC ARBITRATION</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NAVIGATION TABS -->
+            <nav class="main-nav">
+                <button class="nav-tab active" data-tab="command-center" onclick="switchTab('command-center')">
+                    <span class="tab-icon">✦</span> COMMAND CENTER
+                </button>
+                <button class="nav-tab" data-tab="fleet" onclick="switchTab('fleet')">
+                    <span class="tab-icon">🚢</span> FLEET INTELLIGENCE
+                </button>
+                <button class="nav-tab" data-tab="traffic" onclick="switchTab('traffic')">
+                    <span class="tab-icon">🛰️</span> SITUATIONAL AWARENESS
+                </button>
+                <button class="nav-tab" data-tab="mission-ops" onclick="switchTab('mission-ops')">
+                    <span class="tab-icon">⚙️</span> AI MISSION OPS
+                </button>
+                <button class="nav-tab" data-tab="ledger" onclick="switchTab('ledger')">
+                    <span class="tab-icon">📜</span> DECISION LEDGER
+                </button>
+            </nav>
+
+            <!-- INFRASTRUCTURE SYSTEM STATUS BAR -->
+            <div class="header-right">
+                <div class="infra-bar">
+                    <div class="infra-pill" title="AI Decision Intelligence Engine">
+                        <span class="pill-dot dot-cyan"></span>
+                        <span class="pill-label">AWS BEDROCK</span>
+                        <span class="pill-val">ONLINE</span>
+                    </div>
+                    <div class="infra-pill" title="Model Context Protocol Gateway">
+                        <span class="pill-dot dot-blue"></span>
+                        <span class="pill-label">MCP SERVER</span>
+                        <span class="pill-val">ACTIVE</span>
+                    </div>
+                    <div class="infra-pill" id="dbInfraPill" title="CockroachDB Distributed Cloud Ledger">
+                        <span class="pill-dot dot-green"></span>
+                        <span class="pill-label">COCKROACHDB</span>
+                        <span class="pill-val">CONNECTED</span>
+                    </div>
+                    <div class="system-status-pill">
+                        <span class="pulse-green"></span> SYSTEM OPERATIONAL
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-body">
+            
+            <!-- ========================================== -->
+            <!-- TAB 1: COMMAND CENTER (Primary Dashboard) -->
+            <!-- ========================================== -->
+            <section id="view-command-center" class="tab-view active">
+                
+                <!-- TELEMETRY METRIC STRIP -->
+                <div class="metric-strip">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">TRACKED FLEET</span>
+                            <span class="metric-icon">🚢</span>
+                        </div>
+                        <div class="metric-value" id="valFleetCount">2</div>
+                        <div class="metric-sub"><span class="txt-green">● 100% UNDERWAY</span> | Active VTS</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">RIVER CORRIDORS</span>
+                            <span class="metric-icon">🌊</span>
+                        </div>
+                        <div class="metric-value" id="valCorridorCount">3</div>
+                        <div class="metric-sub"><span class="txt-cyan">ch_main</span> | <span class="txt-cyan">ch_north</span> | <span class="txt-cyan">ch_south</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">TRAFFIC RISK INDEX</span>
+                            <span class="metric-icon">🛡️</span>
+                        </div>
+                        <div class="metric-value txt-green" id="valRiskIndex">0.15</div>
+                        <div class="metric-sub">LOW CONGESTION | OPTIMAL</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">CONFIRMED RESERVATIONS</span>
+                            <span class="metric-icon">🔐</span>
+                        </div>
+                        <div class="metric-value" id="valReservationsCount">0</div>
+                        <div class="metric-sub">CockroachDB Cloud Locked</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">DECISIONS COMMITTED</span>
+                            <span class="metric-icon">📊</span>
+                        </div>
+                        <div class="metric-value" id="valLedgerCount">0</div>
+                        <div class="metric-sub">Immutable Audit Log</div>
+                    </div>
+                </div>
+
+                <!-- MAIN COMMAND CENTER GRID -->
+                <div class="command-grid">
+                    
+                    <!-- LEFT COLUMN: CONSOLE & AGENT ORCHESTRATION -->
+                    <div class="panel-column col-main">
+                        <div class="glass-panel console-panel">
+                            <div class="panel-top">
+                                <div class="panel-title-group">
+                                    <span class="panel-indicator"></span>
+                                    <h2>MARITIME MISSION CONTROL CONSOLE</h2>
+                                </div>
+                                <div class="tech-badge">MCP AGENT ENGINE</div>
+                            </div>
+
+                            <!-- PRESET MISSION SCENARIOS -->
+                            <div class="preset-section">
+                                <div class="section-tag">EXECUTE PRESET MISSION SCENARIOS</div>
+                                <div class="scenarios-grid">
+                                    <button class="scenario-card" onclick="runScenario(1)">
+                                        <div class="sc-header">
+                                            <span class="sc-badge badge-blue">SCENARIO 01</span>
+                                            <span class="sc-vessel">MV Alpha Tanker</span>
+                                        </div>
+                                        <div class="sc-name">Deep Draft Corridor Passage Request</div>
+                                        <div class="sc-meta">Draft: 11.5m | Corridor: ch_main | Tug Verification</div>
+                                    </button>
+
+                                    <button class="scenario-card" onclick="runScenario(2)">
+                                        <div class="sc-header">
+                                            <span class="sc-badge badge-amber">SCENARIO 02</span>
+                                            <span class="sc-vessel">MV Beta Carrier</span>
+                                        </div>
+                                        <div class="sc-name">Shoaling Hazard Reroute & Reservation</div>
+                                        <div class="sc-meta">Draft: 10.0m | Restriction Check | ch_north Reroute</div>
+                                    </button>
+
+                                    <button class="scenario-card" onclick="runScenario(3)">
+                                        <div class="sc-header">
+                                            <span class="sc-badge badge-cyan">SCENARIO 03</span>
+                                            <span class="sc-vessel">Hydrodynamic KNN</span>
+                                        </div>
+                                        <div class="sc-name">Experiential Vector Memory Search</div>
+                                        <div class="sc-meta">30-Knot Crosswinds | VECTOR(1024) Cosine Retrieval</div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PROMPT INPUT BOX -->
+                            <div class="command-input-container">
+                                <div class="input-header-label">
+                                    <span>QUERY MARITIME INTELLIGENCE CORE</span>
+                                    <span class="txt-muted">Natural Language Operational Command</span>
+                                </div>
+                                <div class="input-wrapper">
+                                    <textarea id="promptInput" rows="3" placeholder="Enter maritime operational command (e.g. 'Can MV Alpha Tanker transit ch_main right now under 25 knot crosswinds?')"></textarea>
+                                    <button class="btn-execute" id="btnSubmit" onclick="submitAgentQuery()">
+                                        <span class="btn-icon">⚡</span>
+                                        <span class="btn-label">EXECUTE ARBITRATION</span>
+                                        <div class="spinner hidden" id="spinner"></div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- DECISION BRIEFING CARD -->
+                            <div class="decision-output-area">
+                                <div class="card-label">TACTICAL OPERATIONAL DECISION BRIEFING</div>
+                                
+                                <div id="decisionCard" class="decision-display-card hidden">
+                                    <div class="decision-card-top">
+                                        <div class="decision-type-group">
+                                            <span class="badge-decision" id="decisionBadge">APPROVED</span>
+                                            <span class="decision-vessel-tag" id="decisionVesselTag">SHIP_ALPHA</span>
+                                        </div>
+                                        <div class="risk-score-box">
+                                            <span class="risk-lbl">ASSESSED RISK:</span>
+                                            <span class="risk-val" id="riskVal">0.15</span>
+                                        </div>
+                                    </div>
+                                    <div class="decision-content" id="decisionText">
+                                        <!-- Formatted Markdown Rendered Here -->
+                                    </div>
+                                </div>
+
+                                <!-- TRACE EXECUTION LOG -->
+                                <div class="trace-section">
+                                    <div class="trace-header">
+                                        <span>LIVE MCP TOOL EXECUTION TRAJECTORY</span>
+                                        <span class="trace-status-dot"></span>
+                                    </div>
+                                    <div class="trace-terminal" id="traceLog">
+                                        <div class="term-line term-dim">System standby. Awaiting mission control command...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: INFRASTRUCTURE ARCHITECTURE & RIVER CORRIDORS -->
+                    <div class="panel-column col-side">
+                        
+                        <!-- INFRASTRUCTURE CORE DIAGRAM PANEL -->
+                        <div class="glass-panel infra-diagram-panel">
+                            <div class="panel-top">
+                                <div class="panel-title-group">
+                                    <span class="panel-indicator indicator-cyan"></span>
+                                    <h2>MISSION INFRASTRUCTURE CORE</h2>
+                                </div>
+                            </div>
+                            <div class="infra-diagram">
+                                <div class="diagram-node node-bedrock">
+                                    <div class="node-icon">🧠</div>
+                                    <div class="node-title">AWS BEDROCK</div>
+                                    <div class="node-sub">AI Reasoning & Mission Intelligence</div>
+                                </div>
+                                <div class="diagram-arrow">↓</div>
+                                <div class="diagram-node node-mcp">
+                                    <div class="node-icon">🔌</div>
+                                    <div class="node-title">MCP SERVER GATEWAY</div>
+                                    <div class="node-sub">Model Context Protocol Tool Registry</div>
+                                </div>
+                                <div class="diagram-arrow">↓</div>
+                                <div class="diagram-split">
+                                    <div class="mini-node">Vessels</div>
+                                    <div class="mini-node">Corridors</div>
+                                    <div class="mini-node">Traffic</div>
+                                </div>
+                                <div class="diagram-arrow">↓</div>
+                                <div class="diagram-node node-cockroach">
+                                    <div class="node-icon">☁️</div>
+                                    <div class="node-title">COCKROACHDB CLOUD</div>
+                                    <div class="node-sub">VECTOR(1024) & Decision Ledger</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIVER CORRIDORS & HAZARDS PANEL -->
+                        <div class="glass-panel corridors-panel">
+                            <div class="panel-top">
+                                <div class="panel-title-group">
+                                    <span class="panel-indicator indicator-green"></span>
+                                    <h2>RIVER CORRIDORS & HAZARDS</h2>
+                                </div>
+                                <button class="btn-icon-only" onclick="refreshCorridors()" title="Refresh Channels">🔄</button>
+                            </div>
+                            <div class="corridor-list" id="corridorCards">
+                                <div class="loading-spinner-box">Loading corridor state...</div>
+                            </div>
+
+                            <!-- HAZARD CONTROL INJECTION -->
+                            <div class="hazard-control-box">
+                                <div class="hazard-title">SIMULATION HAZARD INJECTION</div>
+                                <div class="hazard-row">
+                                    <select id="selHazardChannel">
+                                        <option value="ch_main">Missouri Main (ch_main)</option>
+                                        <option value="ch_north">North Bypass (ch_north)</option>
+                                        <option value="ch_south">South Auxiliary (ch_south)</option>
+                                    </select>
+                                    <button class="btn-hazard" onclick="injectClosureFromUI()">INJECT STORM HAZARD</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- STORYTELLING & PRODUCT PRESENTATION SECTION -->
+                <!-- ========================================== -->
+                <div class="storytelling-wrapper">
+                    
+                    <!-- STORY BLOCK 01: THE REAL-WORLD PROBLEM -->
+                    <div class="story-block story-layout-normal">
+                        <div class="story-image-col">
+                            <div class="story-image-frame">
+                                <img src="/static/images/ship1.png" alt="Cargo Ship at Port Sunset" class="story-img">
+                                <div class="img-tech-overlay">
+                                    <span class="img-badge">CORRIDOR CONGESTION</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="story-text-col">
+                            <div class="story-tag">01 / THE PROBLEM</div>
+                            <h2 class="story-heading">THE OCEAN IS BECOMING A COMPLEXITY PROBLEM.</h2>
+                            <p class="story-lead">
+                                Modern maritime operations involve thousands of vessels navigating increasingly congested channels, constantly fluctuating weather conditions, strict draft and clearance restrictions, real-time tug escorts, and fragmented operational information across disconnected systems.
+                            </p>
+                            <div class="story-points">
+                                <div class="sp-item"><span class="sp-dot"></span> Dynamic draft & under-keel clearance constraints</div>
+                                <div class="sp-item"><span class="sp-dot"></span> Weather closures & hydrodynamic crosswind hazards</div>
+                                <div class="sp-item"><span class="sp-dot"></span> Tugboat fleet coordination & concurrency limits</div>
+                                <div class="sp-item"><span class="sp-dot"></span> High-cost decisions where seconds and mistakes matter</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STORY BLOCK 02: FROM RAW DATA TO OPERATIONAL INTELLIGENCE -->
+                    <div class="story-block story-layout-reverse">
+                        <div class="story-text-col">
+                            <div class="story-tag">02 / THE INTELLIGENCE LAYER</div>
+                            <h2 class="story-heading">FROM RAW DATA TO OPERATIONAL INTELLIGENCE.</h2>
+                            <p class="story-desc">
+                                Maritime operations generate enormous amounts of fragmented information. Vessel specifications, channel constraints, traffic conditions, restrictions, weather, hydrodynamic memory and operational decisions often live across disconnected systems.
+                            </p>
+                            <p class="story-desc highlight-desc">
+                                Our platform brings these signals together into a unified maritime intelligence layer — enabling operators to understand situations, evaluate risk and make operational decisions from a single command center.
+                            </p>
+
+                            <!-- SEE → UNDERSTAND → DECIDE → EXECUTE → REMEMBER MATRIX -->
+                            <div class="capability-flow-matrix">
+                                <div class="cap-step">
+                                    <span class="cap-tag">SEE</span>
+                                    <span class="cap-detail">Real-time maritime situational awareness</span>
+                                </div>
+                                <div class="cap-step">
+                                    <span class="cap-tag">UNDERSTAND</span>
+                                    <span class="cap-detail">Vessel, channel, traffic and environmental intelligence</span>
+                                </div>
+                                <div class="cap-step">
+                                    <span class="cap-tag">DECIDE</span>
+                                    <span class="cap-detail">AI-assisted route, risk and operational decisions</span>
+                                </div>
+                                <div class="cap-step">
+                                    <span class="cap-tag">EXECUTE</span>
+                                    <span class="cap-detail">Operational tools connected through MCP</span>
+                                </div>
+                                <div class="cap-step">
+                                    <span class="cap-tag">REMEMBER</span>
+                                    <span class="cap-detail">Persistent operational memory powered by CockroachDB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="story-image-col">
+                            <div class="story-image-frame">
+                                <img src="/static/images/ship2.png" alt="Cargo Vessel Underway at Dusk" class="story-img">
+                                <div class="img-tech-overlay">
+                                    <span class="img-badge badge-green">AI INTELLIGENCE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STORY BLOCK 03: ONE INTELLIGENCE LAYER FOR MARITIME OPERATIONS -->
+                    <div class="story-block story-layout-normal">
+                        <div class="story-image-col">
+                            <div class="story-image-frame">
+                                <img src="/static/images/ship3.png" alt="Aerial Maritime Traffic Corridor" class="story-img">
+                                <div class="img-tech-overlay">
+                                    <span class="img-badge badge-blue">DISTRIBUTED CLOUD</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="story-text-col">
+                            <div class="story-tag">03 / THE OPERATING SYSTEM</div>
+                            <h2 class="story-heading">ONE INTELLIGENCE LAYER FOR MARITIME OPERATIONS.</h2>
+                            <p class="story-desc">
+                                Missouri Arbiter connects cloud intelligence, standardized tool protocols, and resilient distributed databases into an integrated operational stack:
+                            </p>
+                            
+                            <div class="arch-explain-grid">
+                                <div class="arch-card">
+                                    <div class="ac-icon">🧠</div>
+                                    <div class="ac-title">AWS BEDROCK</div>
+                                    <div class="ac-desc">AI intelligence, natural language command understanding, and operational risk reasoning.</div>
+                                </div>
+                                <div class="arch-card">
+                                    <div class="ac-icon">🔌</div>
+                                    <div class="ac-title">MCP SERVER</div>
+                                    <div class="ac-desc">Model Context Protocol tool gateway connecting AI reasoning to real maritime tools.</div>
+                                </div>
+                                <div class="arch-card">
+                                    <div class="ac-icon">☁️</div>
+                                    <div class="ac-title">COCKROACHDB</div>
+                                    <div class="ac-desc">Persistent, resilient operational memory, 1024-dim KNN vectors, and transaction ledger.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ARCHITECTURE PIPELINE STRIP -->
+                    <div class="tech-pipeline-strip">
+                        <div class="strip-item">
+                            <span class="st-brand">AWS BEDROCK</span>
+                            <span class="st-role">INTELLIGENCE</span>
+                        </div>
+                        <div class="strip-arrow">→</div>
+                        <div class="strip-item">
+                            <span class="st-brand">MCP SERVER</span>
+                            <span class="st-role">ACTION / TOOL CONNECTIVITY</span>
+                        </div>
+                        <div class="strip-arrow">→</div>
+                        <div class="strip-item">
+                            <span class="st-brand">COCKROACHDB</span>
+                            <span class="st-role">OPERATIONAL MEMORY</span>
+                        </div>
+                        <div class="strip-arrow">→</div>
+                        <div class="strip-item strip-final">
+                            <span class="st-brand">MARITIME OPERATIONS</span>
+                            <span class="st-role">MISSION CONTROL</span>
+                        </div>
+                    </div>
+
+                    <!-- FINAL CTA SECTION -->
+                    <div class="final-cta-card">
+                        <div class="cta-badge">NEXT-GENERATION PLATFORM</div>
+                        <h2 class="cta-title">THE NEXT GENERATION OF MARITIME OPERATIONS.</h2>
+                        <p class="cta-sub">
+                            From vessel awareness to operational decisions, transform complex maritime data into coordinated intelligence.
+                        </p>
+                        <button class="btn-execute btn-cta" onclick="scrollToConsole()">
+                            <span class="btn-icon">⚡</span>
+                            <span class="btn-label">RETURN TO COMMAND CONSOLE</span>
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ========================================== -->
+            <!-- TAB 2: FLEET INTELLIGENCE (Vessels Matrix) -->
+            <!-- ========================================== -->
+            <section id="view-fleet" class="tab-view hidden">
+                <div class="glass-panel full-panel">
+                    <div class="panel-top">
+                        <div class="panel-title-group">
+                            <span class="panel-indicator indicator-cyan"></span>
+                            <h2>VESSEL FLEET INTELLIGENCE MATRIX</h2>
+                        </div>
+                        <div class="panel-actions">
+                            <button class="btn-tech" onclick="loadFleetMatrix()">Refresh Fleet State</button>
+                        </div>
+                    </div>
+
+                    <div class="fleet-content-grid">
+                        <div class="fleet-table-container">
+                            <table class="tech-table">
+                                <thead>
+                                    <tr>
+                                        <th>VESSEL ID</th>
+                                        <th>VESSEL NAME</th>
+                                        <th>TYPE / CLASS</th>
+                                        <th>LENGTH (M)</th>
+                                        <th>DRAFT (M)</th>
+                                        <th>SPEED (KTS)</th>
+                                        <th>STATUS</th>
+                                        <th>ASSIGNED CORRIDOR</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fleetTableBody">
+                                    <tr><td colspan="9" class="loading-text">Loading fleet telemetry...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- INSPECTOR SIDE PANEL -->
+                        <div class="fleet-inspector-card" id="fleetInspectorCard">
+                            <div class="inspector-header">
+                                <span class="insp-icon">⚓</span>
+                                <div>
+                                    <div class="insp-title" id="inspVesselName">MV ALPHA TANKER</div>
+                                    <div class="insp-sub" id="inspVesselID">IMO 9842109 | ship_alpha</div>
+                                </div>
+                            </div>
+                            <div class="inspector-body">
+                                <div class="insp-row">
+                                    <span class="insp-label">PHYSICAL DRAFT:</span>
+                                    <span class="insp-val txt-cyan" id="inspDraft">11.5 meters</span>
+                                </div>
+                                <div class="insp-row">
+                                    <span class="insp-label">VESSEL LENGTH:</span>
+                                    <span class="insp-val" id="inspLength">220.0 meters</span>
+                                </div>
+                                <div class="insp-row">
+                                    <span class="insp-label">NAV SPEED:</span>
+                                    <span class="insp-val" id="inspSpeed">12.0 knots</span>
+                                </div>
+                                <div class="insp-row">
+                                    <span class="insp-label">OPERATIONAL STATUS:</span>
+                                    <span class="badge-status status-underway" id="inspStatus">UNDERWAY</span>
+                                </div>
+                                <div class="insp-divider"></div>
+                                <div class="ukc-calculator-box">
+                                    <div class="ukc-title">UNDER-KEEL CLEARANCE (UKC) CHECK</div>
+                                    <div class="ukc-channel-select">
+                                        <label>Test Channel Margin:</label>
+                                        <select id="selUkcChannel" onchange="calculateUkcFromUI()">
+                                            <option value="ch_main">ch_main (Max Draft: 12.0m)</option>
+                                            <option value="ch_north">ch_north (Max Draft: 10.5m)</option>
+                                            <option value="ch_south">ch_south (Max Draft: 11.0m)</option>
+                                        </select>
+                                    </div>
+                                    <div class="ukc-result" id="ukcResult">
+                                        Margin: <span class="txt-green">+0.5m</span> | Tug Escort: Required
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ========================================== -->
+            <!-- TAB 3: SITUATIONAL AWARENESS (Radar Map) -->
+            <!-- ========================================== -->
+            <section id="view-traffic" class="tab-view hidden">
+                <div class="glass-panel radar-view-panel">
+                    <div class="panel-top">
+                        <div class="panel-title-group">
+                            <span class="panel-indicator indicator-blue"></span>
+                            <h2>SITUATIONAL AWARENESS & REAL-TIME MARITIME RADAR</h2>
+                        </div>
+                        <div class="panel-actions">
+                            <button class="btn-tech" onclick="stepSimulationUI()">Step Sim (+60s)</button>
+                        </div>
+                    </div>
+
+                    <div class="radar-content-layout">
+                        <!-- INTERACTIVE RADAR / MAP CANVAS DISPLAY -->
+                        <div class="radar-screen-box">
+                            <canvas id="radarCanvas" width="850" height="520"></canvas>
+                            <div class="radar-hud-overlay">
+                                <div class="hud-item">LAT: 38.9241° N | LON: 92.2810° W</div>
+                                <div class="hud-item">SWEEP: 24 RPM | RANGE: 15 NM</div>
+                                <div class="hud-item">SCALE: MISSOURI RIVER CORRIDOR GRID</div>
+                            </div>
+                        </div>
+
+                        <!-- SIDE TRAFFIC INTELLIGENCE PANEL -->
+                        <div class="traffic-intel-panel">
+                            <div class="intel-title">CORRIDOR TRAFFIC INTELLIGENCE</div>
+                            <div class="intel-card">
+                                <div class="intel-card-header">MISSOURI MAIN CORRIDOR (ch_main)</div>
+                                <div class="intel-stat">Waypoints: 3 Polyline Points</div>
+                                <div class="intel-stat">Max Allowed Draft: <strong>12.0m</strong></div>
+                                <div class="intel-stat">Width: 150m</div>
+                                <div class="intel-stat">Traffic Status: <span class="txt-green">OPEN / ACTIVE</span></div>
+                            </div>
+                            <div class="intel-card">
+                                <div class="intel-card-header">NORTH BYPASS CORRIDOR (ch_north)</div>
+                                <div class="intel-stat">Waypoints: 3 Polyline Points</div>
+                                <div class="intel-stat">Max Allowed Draft: <strong>10.5m</strong></div>
+                                <div class="intel-stat">Width: 120m</div>
+                                <div class="intel-stat">Traffic Status: <span class="txt-cyan">ALTERNATE ROUTE</span></div>
+                            </div>
+                            <div class="intel-card">
+                                <div class="intel-card-header">SOUTH AUXILIARY CORRIDOR (ch_south)</div>
+                                <div class="intel-stat">Waypoints: 3 Polyline Points</div>
+                                <div class="intel-stat">Max Allowed Draft: <strong>11.0m</strong></div>
+                                <div class="intel-stat">Width: 130m</div>
+                                <div class="intel-stat">Traffic Status: <span class="txt-green">NORMAL</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ========================================== -->
+            <!-- TAB 4: AI MISSION OPERATIONS (MCP Pipeline) -->
+            <!-- ========================================== -->
+            <section id="view-mission-ops" class="tab-view hidden">
+                <div class="glass-panel full-panel">
+                    <div class="panel-top">
+                        <div class="panel-title-group">
+                            <span class="panel-indicator indicator-cyan"></span>
+                            <h2>AI MISSION OPERATIONS & MCP WORKFLOW PIPELINE</h2>
+                        </div>
+                        <div class="tech-badge">AWS BEDROCK + MCP TOOL SERVER</div>
+                    </div>
+
+                    <div class="pipeline-container">
+                        <div class="pipeline-title">MCP AGENT WORKFLOW REASONING PIPELINE</div>
+                        
+                        <div class="pipeline-steps-grid">
+                            <div class="pipe-step step-done">
+                                <div class="step-num">01</div>
+                                <div class="step-label">USER COMMAND</div>
+                                <div class="step-desc">Natural Language Request via Mission Control</div>
+                            </div>
+                            <div class="pipe-step step-done">
+                                <div class="step-num">02</div>
+                                <div class="step-label">AWS BEDROCK</div>
+                                <div class="step-desc">AI Reasoning & Tool Intent Recognition</div>
+                            </div>
+                            <div class="pipe-step step-active">
+                                <div class="step-num">03</div>
+                                <div class="step-label">VESSEL LOOKUP</div>
+                                <div class="step-desc">`lookup_vessel` tool via CockroachDB</div>
+                            </div>
+                            <div class="pipe-step step-active">
+                                <div class="step-num">04</div>
+                                <div class="step-label">CHANNEL ANALYSIS</div>
+                                <div class="step-desc">`lookup_channel` & draft constraints check</div>
+                            </div>
+                            <div class="pipe-step step-active">
+                                <div class="step-num">05</div>
+                                <div class="step-label">RESTRICTION CHECK</div>
+                                <div class="step-desc">`lookup_restrictions` weather/hazard check</div>
+                            </div>
+                            <div class="pipe-step step-active">
+                                <div class="step-num">06</div>
+                                <div class="step-label">VECTOR MEMORY</div>
+                                <div class="step-desc">`search_hydrodynamic_memory` (1024-dim KNN)</div>
+                            </div>
+                            <div class="pipe-step step-active">
+                                <div class="step-num">07</div>
+                                <div class="step-label">TRANSACTION LOCK</div>
+                                <div class="step-desc">`reserve_channel_and_tug` in CockroachDB</div>
+                            </div>
+                            <div class="pipe-step step-active">
+                                <div class="step-num">08</div>
+                                <div class="step-label">DECISION LEDGER</div>
+                                <div class="step-desc">`record_decision_ledger` audit trail</div>
+                            </div>
+                        </div>
+
+                        <div class="mcp-tools-registry">
+                            <div class="registry-title">REGISTERED MCP TOOLS (8 ACTIVE TOOL HANDLERS)</div>
+                            <div class="tools-grid">
+                                <div class="tool-pill"><code>lookup_vessel</code></div>
+                                <div class="tool-pill"><code>lookup_channel</code></div>
+                                <div class="tool-pill"><code>lookup_restrictions</code></div>
+                                <div class="tool-pill"><code>select_available_tug</code></div>
+                                <div class="tool-pill"><code>reserve_channel_and_tug</code></div>
+                                <div class="tool-pill"><code>search_hydrodynamic_memory</code></div>
+                                <div class="tool-pill"><code>record_decision_ledger</code></div>
+                                <div class="tool-pill"><code>get_traffic_simulation_state</code></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ========================================== -->
+            <!-- TAB 5: DECISION LEDGER (Audit Trail) -->
+            <!-- ========================================== -->
+            <section id="view-ledger" class="tab-view hidden">
+                <div class="glass-panel full-panel">
+                    <div class="panel-top">
+                        <div class="panel-title-group">
+                            <span class="panel-indicator indicator-green"></span>
+                            <h2>COCKROACHDB DECISION LEDGER & IMMUTABLE AUDIT TRAIL</h2>
+                        </div>
+                        <div class="panel-actions">
+                            <button class="btn-tech" onclick="refreshLedger()">Fetch Recent Ledger Records</button>
+                        </div>
+                    </div>
+
+                    <div class="ledger-table-wrapper">
+                        <table class="tech-table">
+                            <thead>
+                                <tr>
+                                    <th>TIMESTAMP</th>
+                                    <th>VESSEL ID</th>
+                                    <th>CHANNEL ID</th>
+                                    <th>DECISION TYPE</th>
+                                    <th>OPERATIONAL SUMMARY</th>
+                                    <th>RISK SCORE</th>
+                                    <th>AUDIT ID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledgerTableBody">
+                                <tr><td colspan="7" class="loading-text">Loading immutable decision ledger...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
